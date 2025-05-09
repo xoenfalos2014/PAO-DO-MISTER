@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pão do Mister</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #c0392b;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .product {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .product h3 {
+      margin: 0.5rem 0;
+    }
+    .product p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+    }
+    .product button {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #cart {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 300px;
+    }
+    #cart h4 {
+      margin-top: 0;
+    }
+    #cart ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    #cart li {
+      margin-bottom: 0.3rem;
+    }
+    #cart button {
+      background: #27ae60;
+      border: none;
+      padding: 0.5rem;
+      width: 100%;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Pão do Mister
+  </header>
+
+  <div class="container" id="product-list">
+    <!-- Produtos serão inseridos via JavaScript -->
+  </div>
+
+  <div id="cart">
+    <h4>Seu Pedido</h4>
+    <ul id="cart-items"></ul>
+    <input type="text" id="client-name" placeholder="Seu nome" style="width:100%;margin-bottom:0.5rem;padding:5px;" />
+    <button onclick="sendWhatsAppOrder()">Enviar via WhatsApp</button>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Pão Francês", price: 0.80, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Franc%C3%AAs" },
+      { name: "Pão Integral", price: 1.20, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Integral" },
+      { name: "Pão de Queijo", price: 2.50, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+de+Queijo" },
+      { name: "Croissant", price: 3.00, image: "https://via.placeholder.com/200x150?text=Croissant" },
+      { name: "Pão Doce", price: 1.80, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Doce" }
+    ];
+
+    const cart = [];
+
+    function addToCart(index) {
+      const item = products[index];
+      cart.push(item);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      cart.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - R$ ${item.price.toFixed(2)}`;
+        cartItems.appendChild(li);
+      });
+    }
+
+    function sendWhatsAppOrder() {
+      const name = document.getElementById("client-name").value.trim();
+      if (!name || cart.length === 0) {
+        alert("Preencha seu nome e adicione produtos ao pedido.");
+        return;
+      }
+
+      let message = `Olá, meu nome é ${name} e gostaria de pedir:%0A`;
+      cart.forEach(item => {
+        message += `- ${item.name} (R$ ${item.price.toFixed(2)})%0A`;
+      });
+
+      const phone = "5521990712544"; // Ex: 5511999999999
+      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    }
+
+    const productList = document.getElementById("product-list");
+    products.forEach((product, index) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" />
+        <h3>${product.name}</h3>
+        <p>R$ ${product.price.toFixed(2)}</p>
+        <button onclick="addToCart(${index})">Adicionar</button>
+      `;
+      productList.appendChild(div);
+    });
+  </script>
+</body>
+</html>
