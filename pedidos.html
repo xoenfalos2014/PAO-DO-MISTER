@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pedidos Recebidos</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
+    h1 { color: #e67e22; }
+    .pedido {
+      background: white; padding: 1rem; margin-bottom: 1rem;
+      border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .pedido h3 { margin: 0 0 0.5rem 0; }
+    ul { margin: 0; padding-left: 1.2rem; }
+    li { margin-bottom: 0.2rem; }
+    .info { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>📦 Pedidos Recebidos</h1>
+  <div id="pedido-list"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAn9fZc97X1lyp1xtHZDLTflrplUOWK21w",
+      authDomain: "misterbraseiro-produto.firebaseapp.com",
+      databaseURL: "https://misterbraseiro-produto-default-rtdb.firebaseio.com",
+      projectId: "misterbraseiro-produto",
+      storageBucket: "misterbraseiro-produto.firebasestorage.app",
+      messagingSenderId: "936286687179",
+      appId: "1:936286687179:web:117ae2273e2025dfd9704e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const pedidoList = document.getElementById("pedido-list");
+
+    db.ref("pedidos").on("value", snapshot => {
+      const data = snapshot.val();
+      pedidoList.innerHTML = "";
+      if (!data) {
+        pedidoList.innerHTML = "<p>Nenhum pedido registrado ainda.</p>";
+        return;
+      }
+
+      const pedidos = Object.values(data).reverse();
+      pedidos.forEach(pedido => {
+        const div = document.createElement("div");
+        div.className = "pedido";
+        div.innerHTML = `
+          <h3>${pedido.cliente} - R$ ${pedido.total.toFixed(2)}</h3>
+          <ul>${pedido.itens.map(i => `<li>${i.name} - R$ ${i.price.toFixed(2)}</li>`).join("")}</ul>
+          <div class="info">
+            <strong>Endereço:</strong> ${pedido.endereco}<br>
+            ${pedido.observacoes ? `<strong>Obs.:</strong> ${pedido.observacoes}<br>` : ""}
+            <strong>Data:</strong> ${pedido.data}
+          </div>
+        `;
+        pedidoList.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
