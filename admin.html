@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin com Firebase</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
+    h1 { color: #e67e22; }
+    input, textarea, button {
+      display: block; margin-bottom: 1rem; padding: 0.5rem; width: 100%;
+    }
+    .product {
+      background: white; padding: 1rem; border-radius: 8px;
+      margin-bottom: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .product img { width: 100px; margin-right: 0.5rem; vertical-align: middle; }
+    .product input { width: calc(100% - 1rem); margin: 0.25rem 0; }
+    .images { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0; }
+    button { background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .remove-btn { background: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>Painel de Produtos (Firebase)</h1>
+
+  <h2>Novo Produto</h2>
+  <input type="text" id="name" placeholder="Nome do Produto">
+  <input type="number" id="price" placeholder="Preço (ex: 32.50)" step="0.01">
+  <textarea id="images" placeholder="URLs das imagens (uma por linha)"></textarea>
+  <button onclick="addProduct()">Adicionar Produto</button>
+
+  <h2>Produtos Atuais</h2>
+  <div id="product-list"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAn9fZc97X1lyp1xtHZDLTflrplUOWK21w",
+      authDomain: "misterbraseiro-produto.firebaseapp.com",
+      databaseURL: "https://misterbraseiro-produto-default-rtdb.firebaseio.com",
+      projectId: "misterbraseiro-produto",
+      storageBucket: "misterbraseiro-produto.firebasestorage.app",
+      messagingSenderId: "936286687179",
+      appId: "1:936286687179:web:117ae2273e2025dfd9704e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function addProduct() {
+      const name = document.getElementById("name").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const images = document.getElementById("images").value.trim().split("\n").filter(url => url);
+
+      if (!name || !price || images.length === 0) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+      }
+
+      const newRef = db.ref("produtos").push();
+      newRef.set({ name, price, images }, loadProducts);
+
+      document.getElementById("name").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("images").value = "";
+    }
+
+    function updateProduct(key, field, value) {
+      db.ref("produtos/" + key).update({ [field]: value });
+    }
+
+    function updateImages(key, imagesString) {
+      const images = imagesString.split("\n").filter(url => url);
+      db.ref("produtos/" + key + "/images").set(images);
+    }
+
+    function deleteProduct(key) {
+      if (confirm("Deseja remover este produto?")) {
+        db.ref("produtos/" + key).remove().then(loadProducts);
+      }
+    }
+
+    function loadProducts() {
+      db.ref("produtos").once("value", snapshot => {
+        const data = snapshot.val();
+        const container = document.getElementById("product-list");
+        container.innerHTML = "";
+        if (!data) {
+          container.innerHTML = "<p>Nenhum produto cadastrado.</p>";
+          return;
+        }
+
+        for (let key in data) {
+          const p = data[key];
+          const div = document.createElement("div");
+          div.className = "product";
+          div.innerHTML = `
+            <div class="images">
+              ${(p.images || []).map(img => `<img src="${img}" alt="">`).join("")}
+            </div>
+            <input value="${p.name}" onchange="updateProduct('${key}', 'name', this.value)">
+            <input type="number" value="${p.price}" step="0.01" onchange="updateProduct('${key}', 'price', parseFloat(this.value))">
+            <textarea onchange="updateImages('${key}', this.value)" rows="2">${(p.images || []).join('\n')}</textarea>
+            <button class="remove-btn" onclick="deleteProduct('${key}')">Remover</button>
+          `;
+          container.appendChild(div);
+        }
+      });
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
