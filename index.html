@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mister Braseiro</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #000;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      height: 60px;
+      vertical-align: middle;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .product {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .product h3 {
+      margin: 0.5rem 0;
+    }
+    .product p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+    }
+    .product button {
+      background: #e67e22;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #cart {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: #1e1e1e;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 300px;
+      z-index: 1000;
+    }
+    #cart h4 {
+      margin-top: 0;
+    }
+    #cart ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    #cart li {
+      margin-bottom: 0.3rem;
+    }
+    #cart button {
+      background: #e67e22;
+      border: none;
+      padding: 0.5rem;
+      width: 100%;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.5rem;
+        padding: 0.8rem;
+      }
+      .product h3 {
+        font-size: 1rem;
+      }
+      .product p {
+        font-size: 0.85rem;
+      }
+      .product button {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+      }
+      #cart {
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+      }
+      .container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        padding-bottom: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo Mister Braseiro" />
+  </header>
+
+  <div class="container" id="product-list"></div>
+
+  <div id="cart">
+    <h4>Seu Pedido</h4>
+    <ul id="cart-items"></ul>
+    <input type="text" id="client-name" placeholder="Seu nome" style="width:100%;margin-bottom:0.5rem;padding:5px;" />
+    <input type="text" id="client-address" placeholder="Endereço de entrega" style="width:100%;margin-bottom:0.5rem;padding:5px;" />
+    <textarea id="client-notes" placeholder="Observações (opcional)" rows="2" style="width:100%;margin-bottom:0.5rem;padding:5px;"></textarea>
+    <button onclick="sendWhatsAppOrder()">Enviar via WhatsApp</button>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Pão Francês", price: 0.80, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Franc%C3%AAs" },
+      { name: "Pão Integral", price: 1.20, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Integral" },
+      { name: "Pão de Queijo", price: 2.50, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+de+Queijo" },
+      { name: "Croissant", price: 3.00, image: "https://via.placeholder.com/200x150?text=Croissant" },
+      { name: "Pão Doce", price: 1.80, image: "https://via.placeholder.com/200x150?text=P%C3%A3o+Doce" }
+    ];
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    updateCart();
+
+    function addToCart(index) {
+      const item = products[index];
+      cart.push(item);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${item.name} - R$ ${item.price.toFixed(2)} 
+          <button onclick="removeFromCart(${i})" style="float:right;background:#e74c3c;border:none;color:white;border-radius:4px;padding:2px 6px;cursor:pointer;">x</button>`;
+        cartItems.appendChild(li);
+        total += item.price;
+      });
+
+      const totalItem = document.createElement("li");
+      totalItem.style.fontWeight = "bold";
+      totalItem.style.marginTop = "0.5rem";
+      totalItem.textContent = `Total: R$ ${total.toFixed(2)}`;
+      cartItems.appendChild(totalItem);
+    }
+
+    function sendWhatsAppOrder() {
+      const name = document.getElementById("client-name").value.trim();
+      const address = document.getElementById("client-address").value.trim();
+      const notes = document.getElementById("client-notes").value.trim();
+
+      if (!name || !address || cart.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Pedido incompleto',
+          text: 'Preencha seu nome, endereço e adicione produtos ao pedido.',
+        });
+        return;
+      }
+
+      let message = `Olá, meu nome é ${name} e gostaria de fazer um pedido:%0A%0A`;
+      cart.forEach(item => {
+        message += `• ${item.name} (R$ ${item.price.toFixed(2)})%0A`;
+      });
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      message += `%0ATotal: R$ ${total.toFixed(2)}%0AEndereço: ${address}%0A`;
+      if (notes) message += `Observações: ${notes}%0A`;
+
+      const phone = "5521990712544";
+      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Pedido enviado!',
+        text: 'Você será redirecionado para a página de confirmação.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      localStorage.removeItem("cart");
+      setTimeout(() => {
+        window.location.href = "thanks.html";
+      }, 2000);
+    }
+
+    const productList = document.getElementById("product-list");
+    products.forEach((product, index) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" />
+        <h3>${product.name}</h3>
+        <p>R$ ${product.price.toFixed(2)}</p>
+        <button onclick="addToCart(${index})">Adicionar</button>
+      `;
+      productList.appendChild(div);
+    });
+
+    // Registrar service worker para PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
