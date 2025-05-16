@@ -1,249 +1,40 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Loja Mister Braseiro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8">
+  <title>Atendimento Online</title>
   <style>
     body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('background_mister.jpeg') center center fixed;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      color: white;
-      text-shadow: 1px 1px 2px black;
+      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
     }
-    header { background: #000; color: white; padding: 1rem; text-align: center; }
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
+    h1 {
+      color: #007bff;
     }
-    .product {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .product img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    .product h3 { margin: 0.5rem 0; }
-    .product p { margin: 0.3rem 0; font-size: 0.9rem; }
-    .product button {
-      background: #e67e22;
-      color: white;
+    .btn {
+      display: inline-block;
+      margin: 20px;
+      padding: 15px 30px;
+      font-size: 18px;
       border: none;
-      padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    #toggle-cart {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #e67e22;
+      border-radius: 10px;
+      background-color: #007bff;
       color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      z-index: 9999;
+      text-decoration: none;
       cursor: pointer;
     }
-
-    #cart-drawer {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 320px;
-      background: #1e1e1e;
-      color: white;
-      padding: 1rem;
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-      z-index: 9998;
-    }
-
-    #cart-drawer.open {
-      transform: translateX(0%);
-    }
-
-    #cart-drawer h4, #cart-drawer input, #cart-drawer textarea, #cart-drawer button {
-      margin-bottom: 0.5rem;
-      width: 100%;
-    }
-
-    #cart-drawer ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 1rem;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    #cart-drawer li {
-      margin-bottom: 0.3rem;
-    }
-
-    
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background: #1e1e1e;
-      color: white;
-      padding: 1rem;
-      border-radius: 8px;
-      max-width: 300px;
-      z-index: 1000;
-    }
-    #cart h4 { margin-top: 0; }
-    #cart ul {
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-    #cart li { margin-bottom: 0.3rem; }
-    #cart button {
-      background: #e67e22;
-      border: none;
-      padding: 0.5rem;
-      width: 100%;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
+    .btn:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <header>
-    Loja Mister Braseiro
-  </header>
-
-  <div class="container" id="product-list"></div>
-
-  <button id="toggle-cart">🛒 Ver Carrinho</button><div id="cart-drawer" class="closed"><h4>Seu Pedido</h4><ul id="cart-items"></ul><input type="text" id="client-name" placeholder="Seu nome"><input type="text" id="client-address" placeholder="Endereço de entrega"><textarea id="client-notes" placeholder="Observações (opcional)" rows="2"></textarea><button onclick="sendWhatsAppOrder()">Enviar via WhatsApp</button></div><script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAn9fZc97X1lyp1xtHZDLTflrplUOWK21w",
-      authDomain: "misterbraseiro-produto.firebaseapp.com",
-      databaseURL: "https://misterbraseiro-produto-default-rtdb.firebaseio.com",
-      projectId: "misterbraseiro-produto",
-      storageBucket: "misterbraseiro-produto.firebasestorage.app",
-      messagingSenderId: "936286687179",
-      appId: "1:936286687179:web:117ae2273e2025dfd9704e"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    updateCart();
-
-    function addToCart(product) {
-      cart.push(product);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-    }
-
-    function updateCart() {
-      const cartItems = document.getElementById("cart-items");
-      cartItems.innerHTML = "";
-      let total = 0;
-
-      cart.forEach((item, i) => {
-        const li = document.createElement("li");
-        li.innerHTML = `${item.name} - R$ ${item.price.toFixed(2)} 
-          <button onclick="removeFromCart(${i})" style="float:right;background:#e74c3c;border:none;color:white;border-radius:4px;padding:2px 6px;cursor:pointer;">x</button>`;
-        cartItems.appendChild(li);
-        total += item.price;
-      });
-
-      const totalItem = document.createElement("li");
-      totalItem.style.fontWeight = "bold";
-      totalItem.style.marginTop = "0.5rem";
-      totalItem.textContent = `Total: R$ ${total.toFixed(2)}`;
-      cartItems.appendChild(totalItem);
-    }
-
-    function sendWhatsAppOrder() {
-      const name = document.getElementById("client-name").value.trim();
-      const address = document.getElementById("client-address").value.trim();
-      const notes = document.getElementById("client-notes").value.trim();
-
-      if (!name || !address || cart.length === 0) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Pedido incompleto',
-          text: 'Preencha seu nome, endereço e adicione produtos ao pedido.',
-        });
-        return;
-      }
-
-      let message = `Olá, meu nome é ${name} e gostaria de fazer um pedido:%0A%0A`;
-      cart.forEach(item => {
-        message += `• ${item.name} (R$ ${item.price.toFixed(2)})%0A`;
-      });
-
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
-      message += `%0ATotal: R$ ${total.toFixed(2)}%0AEndereço: ${address}%0A`;
-      if (notes) message += `Observações: ${notes}%0A`;
-
-      const phone = "5521990712544";
-      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Pedido enviado!',
-        text: 'Você será redirecionado.',
-        timer: 2000,
-        showConfirmButton: false
-      });
-
-      localStorage.removeItem("cart");
-    }
-
-    const productList = document.getElementById("product-list");
-
-    db.ref("produtos").on("value", snapshot => {
-      const data = snapshot.val();
-      productList.innerHTML = "";
-      for (let key in data) {
-        const product = data[key];
-        const firstImg = (product.images && product.images.length) ? product.images[0] : "";
-        const div = document.createElement("div");
-        div.className = "product";
-        div.innerHTML = `
-          <img src="${firstImg}" alt="${product.name}" />
-          <h3>${product.name}</h3>
-          <p>R$ ${product.price.toFixed(2)}</p>
-          <button onclick='addToCart(${JSON.stringify(product)})'>Adicionar</button>
-        `;
-        productList.appendChild(div);
-      }
-    });
-  document.getElementById("toggle-cart").addEventListener("click", () => {
-      const drawer = document.getElementById("cart-drawer");
-      drawer.classList.toggle("open");
-    });
-</script>
+  <h1>Bem-vindo ao Atendimento Online</h1>
+  <a href="cliente-login.html" class="btn">Área do Cliente</a>
+  <a href="admin-login.html" class="btn">Área do Administrador</a>
+ 
 </body>
 </html>
