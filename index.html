@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner IRPF 2026 - Isabella Fonseca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Atualização para a versão mais recente e estável do FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .banner-wrapper {
+            /* Dimensões ideais para publicação (1080x1080 adaptado) */
+            width: 100%;
+            max-width: 850px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Marca de água configurada para a imagem JPG enviada e agora com link */
+        .leao-bg {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 65%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6; /* Transparência ajustada */
+            mix-blend-mode: screen; /* Faz o fundo azul da sua imagem se misturar perfeitamente com o fundo do banner */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 40%); /* Apaga a borda esquerda da foto suavemente */
+            mask-image: linear-gradient(to right, transparent, black 40%);
+            z-index: 5;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .leao-bg:hover {
+            opacity: 0.8; /* Fica ligeiramente mais visível ao passar o rato */
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilização da scrollbar da modal */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="banner" class="banner-wrapper flex flex-col relative pb-12">
+        <!-- Imagem do leão enviada por si, agora a funcionar como link para o Instagram -->
+        <a href="https://www.instagram.com/bella_monique_soares?igsh=enU2NDZtOXU3endv" target="_blank" title="Siga-me no Instagram">
+            <img src="leao irpf.jpg" alt="Marca D'água Leão - Link Instagram" class="leao-bg">
+        </a>
+
+        <!-- Faixa de topo -->
+        <div class="w-full bg-yellow-400 text-blue-900 text-center py-2 font-bold text-sm z-20 shadow-md">
+            <i class="fas fa-shield-alt mr-1"></i> Rápido, Seguro e 100% Digital
+        </div>
+
+        <!-- Conteúdo do Texto -->
+        <div class="w-full md:w-4/5 p-10 md:p-14 z-10 flex flex-col justify-center relative pointer-events-none">
+            
+            <div class="inline-block bg-blue-800 text-yellow-400 font-bold px-4 py-1 rounded-full text-xs uppercase tracking-widest mb-6 w-max border border-blue-700 shadow-sm pointer-events-auto">
+                <i class="fas fa-calculator mr-2"></i> Assessoria Especializada
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-black text-white leading-tight mb-2">
+                IRPF <span class="text-yellow-400">2026</span>
+            </h1>
+            
+            <h2 class="text-2xl md:text-3xl text-blue-100 font-light mb-8">
+                Declaração de Imposto de Renda
+            </h2>
+
+            <div class="glass-panel rounded-xl p-6 md:p-8 mb-8 border-l-4 border-yellow-400 w-full md:w-11/12 shadow-xl pointer-events-auto">
+                <p class="text-gray-200 text-base md:text-lg leading-relaxed">
+                    Não deixe para a última hora! Evite a malha fina, garanta a sua restituição correta e faça a sua declaração com total segurança e sigilo.
+                </p>
+                <div class="mt-5 pt-5 border-t border-blue-800/50">
+                    <p class="text-white font-bold text-xl">
+                        Com <span class="text-yellow-400">Isabella Fonseca</span>
+                    </p>
+                    <p class="text-blue-200 text-sm md:text-base mt-2 font-medium">
+                        <i class="fas fa-award text-yellow-400 mr-2 text-lg"></i> Mais de 15 anos de experiência como Analista Tributária
+                    </p>
+                    <p class="text-yellow-400 font-black text-sm md:text-base mt-3 uppercase tracking-widest">
+                        Faça com quem tem competência!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botões de Ação (Com Pointer Events ativado para continuarem clicáveis) -->
+            <div class="flex flex-col sm:flex-row flex-wrap gap-4 mt-2 pointer-events-auto">
+                <!-- Botão WhatsApp -->
+                <a href="https://wa.me/5521996705484?text=Olá! Gostaria de agendar ou saber mais sobre a minha declaração do IRPF 2026." target="_blank" class="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-green-500/30 transition duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                    <i class="fab fa-whatsapp text-3xl"></i>
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm">WhatsApp</span>
+                        <span class="text-base font-bold text-green-100">Agendar</span>
+                    </div>
+                </a>
+
+                <!-- Botão Instagram -->
+                <a href="https://www.instagram.com/bella_monique_soares?igsh=enU2NDZtOXU3endv" target="_blank" class="bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 hover:opacity-90 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-pink-500/30 transition duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                    <i class="fab fa-instagram text-3xl"></i>
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm">Siga no</span>
+                        <span class="text-base font-bold">Instagram</span>
+                    </div>
+                </a>
+                
+                <!-- Botão Checklist -->
+                <button onclick="document.getElementById('modal-checklist').classList.remove('hidden')" class="bg-blue-800/80 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-blue-900/50 transition duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1 border border-blue-600/50 backdrop-blur-sm">
+                    <i class="fas fa-list-check text-2xl text-yellow-400"></i>
+                    <div class="flex flex-col text-left">
+                        <span class="text-base">Checklist</span>
+                        <span class="text-xs font-normal text-blue-200">Documentos</span>
+                    </div>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE CHECKLIST -->
+    <div id="modal-checklist" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl relative">
+            
+            <!-- Cabeçalho da Modal -->
+            <div class="bg-blue-900 text-white p-6 flex justify-between items-center relative">
+                <h3 class="text-2xl font-black uppercase tracking-wide flex items-center gap-3">
+                    <i class="fas fa-file-invoice-dollar text-yellow-400"></i> Checklist IRPF
+                </h3>
+                <button onclick="document.getElementById('modal-checklist').classList.add('hidden')" class="text-blue-200 hover:text-white transition bg-white/10 hover:bg-red-500 rounded-full w-10 h-10 flex items-center justify-center">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Corpo da Modal (Com scroll) -->
+            <div class="p-6 md:p-8 overflow-y-auto text-slate-700 space-y-6">
+                <p class="text-sm bg-blue-50 text-blue-800 p-4 rounded-lg font-medium border border-blue-100">
+                    <i class="fas fa-info-circle mr-2"></i> Separe estes documentos antes de iniciarmos a sua declaração para garantir um processo rápido e sem cair na malha fina.
+                </p>
+
+                <!-- Categoria 1 -->
+                <div>
+                    <h4 class="font-bold text-lg text-blue-900 border-b-2 border-yellow-400 pb-1 mb-3 flex items-center gap-2">
+                        <i class="fas fa-id-card text-blue-600"></i> Dados Pessoais e Dependentes
+                    </h4>
+                    <ul class="list-none space-y-2 text-sm md:text-base ml-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> RG, CPF e Título de Eleitor.</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Comprovativo de residência atualizado.</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Dados da Conta Bancária (para restituição).</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Nome, CPF e data de nascimento de todos os dependentes.</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Cópia da declaração do ano anterior (recibo).</li>
+                    </ul>
+                </div>
+
+                <!-- Categoria 2 -->
+                <div>
+                    <h4 class="font-bold text-lg text-blue-900 border-b-2 border-yellow-400 pb-1 mb-3 flex items-center gap-2">
+                        <i class="fas fa-hand-holding-dollar text-blue-600"></i> Informes de Rendimentos
+                    </h4>
+                    <ul class="list-none space-y-2 text-sm md:text-base ml-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Informe da(s) empresa(s) onde trabalhou.</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Informes de Bancos e Corretoras (saldos e investimentos).</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Comprovativos de rendas de imóveis (caso possua).</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Informe do INSS (para aposentados/pensionistas).</li>
+                    </ul>
+                </div>
+
+                <!-- Categoria 3 -->
+                <div>
+                    <h4 class="font-bold text-lg text-blue-900 border-b-2 border-yellow-400 pb-1 mb-3 flex items-center gap-2">
+                        <i class="fas fa-receipt text-blue-600"></i> Despesas Dedutíveis (Recibos e Notas)
+                    </h4>
+                    <ul class="list-none space-y-2 text-sm md:text-base ml-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Saúde (Médicos, dentistas, psicólogos, exames, hospitais e planos de saúde com CNPJ).</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Educação (Mensalidades de escolas e faculdades).</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Comprovativos de pensão de alimentos (judicial).</li>
+                    </ul>
+                </div>
+
+                <!-- Categoria 4 -->
+                <div>
+                    <h4 class="font-bold text-lg text-blue-900 border-b-2 border-yellow-400 pb-1 mb-3 flex items-center gap-2">
+                        <i class="fas fa-house-chimney text-blue-600"></i> Bens, Direitos e Dívidas
+                    </h4>
+                    <ul class="list-none space-y-2 text-sm md:text-base ml-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Documentos de compra/venda de imóveis e veículos.</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Posição de financiamentos e consórcios.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Rodapé da Modal -->
+            <div class="bg-gray-50 p-4 border-t flex justify-end">
+                <a href="https://wa.me/5521996705484?text=Olá! Já vi a checklist e separei os meus documentos para o IRPF 2026." target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center gap-2">
+                    <i class="fab fa-whatsapp text-xl"></i> Enviar documentos agora
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
